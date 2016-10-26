@@ -1,65 +1,64 @@
+import os.path
 import re
 from collections import Counter
 
 
-## Загружает текст из файла, возвращает строку
+# Загружает текст из файла
 def load_data(filepath):
-    #text_file = open(filepath,'r')
-    try:
+    if(os.path.exists(filepath)):
         with open(filepath, 'r') as text_file:
-            text_data = text_file.read()
-            return text_data
-    except FileNotFoundError:
-    	return None
+            load_text = text_file.read()
+    else:
+        load_text = None
+    return load_text
 
 
-## Чистит текст, возвращает строку
+# Чистит текст, возвращает строку
 def clear_text(strings):
-    text_data = re.sub("\n|\t|\?|\!|\.|,|\-|\=|\:", '', strings)    
+    text_data = re.sub("\n|\t|\?|\!|\.|,|\-|\=|\:", '', strings)
     text_data = re.sub("\s\s", '', text_data)
     return text_data
 
-## Разделяет полученный текст на слова, возвращает список со всеми словами из текста
+
+# Разделяет полученный текст на слова, возвращает список со всеми словами
 def split_text(strings):
     split_data = re.split("\s", strings)
     return split_data
 
-## Приводит все слова к нижнему регистру, возвращает список
+
+# Приводит все слова к нижнему регистру, возвращает список
 def normalize_words(words_array):
-	return [word.lower() for word in words_array]
+    return [word.lower() for word in words_array]
 
-## Выдаёт список 10 слов, которые больше всего встречаются, вместе с числом их повторений
-## Возвращает список
+
+# Выдаёт список 10 самых частых слов, вместе с числом их повторений
 def get_most_frequent_words(text_array):
-    freq_dict = dict(Counter(text_array))
-    I = lambda x:x[1]
-    words_list = sorted(freq_dict.items(), key=I, reverse = True)[0:10]
+    words_counter = Counter()
+    for word in text_array:
+        words_counter[word] += 1
+    words_list = words_counter.most_common(10)
     return words_list
-    
-
 
 
 def main():
 
-    print("Введите путь до файла:")
-    path = input()
+    path = input("Введите путь до файла:\n")
     file_content = load_data(path)
 
-    #Если файл существует
+    # Если файл существует
     if file_content is not None:
         string = clear_text(file_content)
-        string = split_text(string)
-        string = normalize_words(string)
-        #print(string)
-        freq_array = get_most_frequent_words(string) 
+        split_string = split_text(string)
+        norm_string = normalize_words(split_string)
+        freq_array = get_most_frequent_words(norm_string)
+        print("Самые встречающиеся слова в тексте:")
         for word_number, item in enumerate(freq_array):
-        	print(str(word_number+1)+".", item[0])
+            print(str(word_number+1)+".", item[0])
 
     else:
-    	print("Файла, путь до которого вы ввели, не существует")
-
-
+        print("Файла, путь до которого вы ввели, не существует")
 
 
 if __name__ == '__main__':
-	main()
+    main()
+
