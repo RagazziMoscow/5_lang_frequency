@@ -33,9 +33,7 @@ def normalize_words(words_array):
 
 # Выдаёт список 10 самых частых слов, вместе с числом их повторений
 def get_most_frequent_words(text_array):
-    words_counter = Counter()
-    for word in text_array:
-        words_counter[word] += 1
+    words_counter = Counter(text_array)
     words_list = words_counter.most_common(10)
     return words_list
 
@@ -53,7 +51,7 @@ def main():
         freq_array = get_most_frequent_words(norm_string)
         print("Самые встречающиеся слова в тексте:")
         for word_number, item in enumerate(freq_array):
-            print(str(word_number+1)+".", item[0])
+            print("{point_num}. {word}".format(point_num=word_number+1, word=item[0]))
 
     else:
         print("Файла, путь до которого вы ввели, не существует")
@@ -61,4 +59,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
